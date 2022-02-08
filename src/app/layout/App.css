@@ -1,0 +1,19 @@
+body{
+  background-color: beige;
+}
+
+.buttonContainer
+{
+  display: flex;
+  width: 40%;
+  margin-left: 435px;
+  margin-top: 40px;
+  margin-right: auto;
+}
+
+.success
+{
+   position: fixed;
+   bottom: 0;
+   left: 0;
+}
