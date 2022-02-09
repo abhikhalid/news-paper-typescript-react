@@ -17,6 +17,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import Alert from "@mui/material/Alert";
 
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+
 const App = () => {
   const [articles, setArticles] = useState<News[]>([]);
 
@@ -25,7 +28,8 @@ const App = () => {
   const [isGetNewsClicked, setGetNewsClicked] = useState<boolean>(false);
   const [isCopyNewsClicked, setCopyNewsClicked] = useState<boolean>(false);
 
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState<boolean>(false);
+  const [editSuccess, setEditSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     const url =
@@ -83,6 +87,8 @@ const App = () => {
     setCart(newCart);
 
     setDeleteSuccess(true);
+
+    setOpen(true);
   };
 
   const editedNews = (editedNews: News) => {
@@ -93,7 +99,38 @@ const App = () => {
     newNews = cart.filter((article) => article.id !== editedNews.id);
 
     setCart([editedNews, ...newNews]);
+
+    setEditSuccess(true);
+    setOpen(true);
   };
+
+  // Success Toast starts
+
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  //Success Toast ends
 
   return (
     <div className="App">
@@ -137,14 +174,46 @@ const App = () => {
       )}
 
       {deleteSuccess && (
-        <Stack sx={{ width: "100%" }} spacing={2} className="success">
-          <Alert severity="success">Deleted Successfully!</Alert>
+        // <Stack sx={{ width: "100%" }} spacing={2} className="success">
+        //   <Alert severity="success">Deleted Successfully!</Alert>
+        // </Stack>
+
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Deleted Successfully!
+            </Alert>
+          </Snackbar>
+        </Stack>
+      )}
+
+      {editSuccess && (
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              News Edited Successfully!
+            </Alert>
+          </Snackbar>
         </Stack>
       )}
 
       {setTimeout(() => {
         setDeleteSuccess(false);
+        setOpen(false);
       }, 6000)}
+
+      {setTimeout(() => {
+        setEditSuccess(false);
+        setOpen(false);
+      }, 10000)}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./EditNews.css";
 
@@ -11,6 +11,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import News from "../../models/News";
 
+import { ChangeEvent } from "react";
+
 const EditNews: React.FC<{
   id: string;
   author: string;
@@ -18,13 +20,13 @@ const EditNews: React.FC<{
   publishedAt: string;
   title: string;
   urlToImage: string;
-  editedNews: (editedNews:News)=> void
+  editedNews: (editedNews: News) => void;
 }> = (props) => {
   const [open, setOpen] = React.useState(true);
 
-  const [authorName, setAuthorName] = useState("");
-  const [descriptions, setDescriptions] = useState("");
-  const [publishedAtt, setPublishedAtt] = useState("");
+  const [authorName, setAuthorName] = useState(props.author);
+  const [descriptions, setDescriptions] = useState(props.description);
+  const [publishedAtt, setPublishedAtt] = useState(props.publishedAt);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,6 +49,18 @@ const EditNews: React.FC<{
     };
 
     props.editedNews(editedNews);
+  };
+
+  const setAuhor = (event: ChangeEvent<HTMLInputElement>) => {
+    setAuthorName(event.target.value);
+  };
+
+  const setDescription = (event: ChangeEvent<HTMLInputElement>) => {
+    setDescriptions(event.target.value);
+  };
+
+  const setPublished = (event: ChangeEvent<HTMLInputElement>) => {
+    setPublishedAtt(event.target.value);
   };
 
   return (
@@ -74,6 +88,7 @@ const EditNews: React.FC<{
             type="text"
             fullWidth
             variant="standard"
+            onChange={setDescription}
           />
           <TextField
             autoFocus
@@ -84,6 +99,7 @@ const EditNews: React.FC<{
             type="text"
             fullWidth
             variant="standard"
+            onChange={setPublished}
           />
         </DialogContent>
         <DialogActions>
