@@ -19,6 +19,7 @@ import Alert from "@mui/material/Alert";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import ApiManager from "../utilities/apiManager";
 
 const App = () => {
   const [articles, setArticles] = useState<News[]>([]);
@@ -55,6 +56,28 @@ const App = () => {
 
       setArticles(allNews);
     });
+
+    ApiManager.NewsService.GetNews().then(response => {
+      // we should always check is status value ok/success/true
+      if (response.status == 'ok') {
+        
+        const allNews = response.articles.map((news: News) => {
+          
+          const newNews = new News(
+            news.author,
+            news.title,
+            news.description,
+            news.urlToImage,
+            news.publishedAt
+          );
+         
+          return newNews;
+        });
+        setArticles(allNews);
+      }
+
+    });
+
   }, []);
 
   const addToFavourite = (favouriteNews: News) => {
